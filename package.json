@@ -1,0 +1,26 @@
+{
+  "name": "real-time-chat",
+  "version": "1.0.0",
+  "description": "a real time chat application, server using socket.io, nodets. client with reactTS and tailwindcss.",
+  "keywords": [
+    "real-time",
+    "socket",
+    "node",
+    "typescript"
+  ],
+  "homepage": "https://github.com/Jesus24-Dev/real-time-chat-ReactTS-Socket.io#readme",
+  "bugs": {
+    "url": "https://github.com/Jesus24-Dev/real-time-chat-ReactTS-Socket.io/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jesus24-Dev/real-time-chat-ReactTS-Socket.io.git"
+  },
+  "license": "ISC",
+  "author": "jesus24-dev",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

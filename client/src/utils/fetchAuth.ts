@@ -19,7 +19,7 @@ export async function fetchAuth(isRegister: boolean = false, form: FormData){
     if(data.status === 'success'){
         if(!isRegister){
             localStorage.setItem('token', data.token)
-            localStorage.setItem('userId', data.user.id)
+            localStorage.setItem('user', JSON.stringify(data.user))
         }
         const response: AuthResponse = {
             status: data.status,

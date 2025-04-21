@@ -18,7 +18,7 @@ app.get('/api/hello', (req: Request, res: Response) => {
     res.status(200).json({message: "hello world from backend"})
 })
 
-app.use('/auth', authRouter)
-app.use('/user', userRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/user', userRouter)
 
 export default server;

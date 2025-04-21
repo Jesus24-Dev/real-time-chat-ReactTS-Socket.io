@@ -1,19 +1,21 @@
-import {useState, useEffect} from 'react'
+import {Routes, Route} from 'react-router-dom'
+import Auth from './pages/Auth'
+import Home from './pages/Home'
+import ProtectedRoute from './components/ProtectedRoute'
+import useAuth from './hooks/useAuth'
 
 function App() {
-  const [message, setMessage] = useState<string | undefined>(undefined)
 
-  useEffect(() => {
-    fetch("http://localhost:3030/api/hello")
-    .then(res => res.json())
-    .then(data => setMessage(data.message))
-  }, [])
-
+  const {isAuthenticated} = useAuth();
+  
   return (
-    <>
-      <h1 className="text-2xl text-white bg-blue-500">Hello world from react!</h1>
-      <p className="italic">Message from backend: {message}</p>
-    </>
+    <Routes>
+      <Route path="/" element={<Auth />}/>
+      <Route element={<ProtectedRoute isAuthenticated={isAuthenticated}/>}>
+        <Route path="/home" element={<Home />}/>
+      </Route>
+      
+    </Routes>
   )
 }
 

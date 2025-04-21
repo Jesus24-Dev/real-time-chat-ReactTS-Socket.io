@@ -6,11 +6,11 @@ export async function getUser(req: Request, res: Response): Promise<void>{
     try {
         const user = await User.findByPk(userId)
         if(!user){  
-            res.status(404).json({error: "User not found"})
+            res.status(404).json({status: "error", error: "User not found"})
             return;
         }
-        res.status(200).json({user})
+        res.status(200).json({status: "success", user})
     } catch(e){
-        res.status(400).json({error: e})
+        res.status(400).json({status: "error", error: e})
     }
 }

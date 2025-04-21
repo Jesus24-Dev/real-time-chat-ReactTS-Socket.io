@@ -34,7 +34,7 @@ export async function loginUser(req: Request, res: Response): Promise<void>{
         }
 
         const token = await generateToken({id: user.id, email: user.email})
-        res.status(200).json({status: 'success', message: "Login successful", token, user: {id: user.id, email: user.email}})
+        res.status(200).json({status: 'success', message: "Login successful", token, user: {id: user.id, username: user.username}})
     } catch(e){
         res.status(400).json({status: 'error', error: e})
     }

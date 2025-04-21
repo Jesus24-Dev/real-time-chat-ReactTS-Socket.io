@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import ChatBox from '../components/ChatBox';
 
 interface UserAttributes {
     id?: number;
@@ -14,7 +15,8 @@ export default function Home(){
     const [user, setUser] = useState<UserAttributes | null>(null);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
-        const userId = localStorage.getItem('userId');
+        const user = localStorage.getItem('user');
+        const userId = user ? JSON.parse(user).id : null;
 
         if(userId){
             fetch(`http://localhost:3030/api/user/me/${userId}`)
@@ -35,6 +37,7 @@ export default function Home(){
             <div>
                 <h1>Welcome, {user?.username}</h1>
                 <h2>Your email is: {user?.email}</h2>
+                <ChatBox />
             </div>
         </>
     )

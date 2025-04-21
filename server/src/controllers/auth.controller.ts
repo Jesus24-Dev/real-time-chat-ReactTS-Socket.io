@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import User from "../models/User";
-import { hashPassword, comparePassword } from '../utils/authFunctions'
+import { hashPassword, comparePassword, generateToken } from '../utils/authFunctions'
 
 export async function registerUser(req: Request, res: Response): Promise<void>{
     const {username, email, password} = req.body;
@@ -12,9 +12,9 @@ export async function registerUser(req: Request, res: Response): Promise<void>{
             email,
             password: hashedPassword
         })
-        res.status(201).json({message: "User created succesfullly", user: userCreated})
+        res.status(201).json({status: 'success', message: "User created succesfullly"})
     } catch(e){
-        res.status(400).json({error: e})
+        res.status(400).json({status: 'error', error: e})
     }
 }
 
@@ -24,16 +24,18 @@ export async function loginUser(req: Request, res: Response): Promise<void>{
     try {
         const user = await User.findOne({where: {email}})
         if(!user){
-            res.status(404).json({error: "User not found"})
+            res.status(404).json({status: 'error', error: "User not found"})
             return;
         }
         const isPasswordValid = await comparePassword(password, user.password)
         if(!isPasswordValid){
-            res.status(401).json({error: "Invalid password"})
+            res.status(401).json({status: 'error', error: "Invalid password"})
             return;
         }
-        res.status(200).json({message: "Login successful", user})
+
+        const token = await generateToken({id: user.id, email: user.email})
+        res.status(200).json({status: 'success', message: "Login successful", token, user: {id: user.id, email: user.email}})
     } catch(e){
-        res.status(400).json({error: e})
+        res.status(400).json({status: 'error', error: e})
     }
 }

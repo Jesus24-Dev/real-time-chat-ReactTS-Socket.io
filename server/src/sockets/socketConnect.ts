@@ -1,4 +1,5 @@
 import {Socket} from 'socket.io'
+import { socketRoom } from './socketRoom';
 
 interface MessageAttributes {
     username: string;
@@ -6,13 +7,8 @@ interface MessageAttributes {
 }
 
 export function socketConnect(io: any){
-    io.on('connection', (socket: Socket) => {
-        console.log('User connected', socket.id)
-        
-        socket.on('message', (message: MessageAttributes) => {
-            io.emit('message', message) 
-        }) 
-
+    io.on('connection', (socket: Socket) => {        
+        socketRoom(socket, io);
         socket.on('disconnect', () => {
             console.log('User disconnected', socket.id)
         })

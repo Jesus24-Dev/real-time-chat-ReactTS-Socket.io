@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import FormField from '../components/FormField';
+import FormField from '../components/ui/FormField';
 import { FormData } from '../types/formDataType';
 import { fetchAuth } from '../utils/fetchAuth';
 import { useNavigate } from 'react-router-dom';

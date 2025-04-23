@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import Button from '../ui/Button';
 
 type JoinRoomButtonProps = {
     roomId: number | undefined;  
@@ -45,9 +46,9 @@ export default function JoinRoomButton({roomId}: JoinRoomButtonProps) {
     }
 
     return (
-        <button onClick={handleOnClick}>
-            Join
-        </button>
+        <>
+            <Button type="button" label="Join" disabled={false} onClick={handleOnClick} />
+        </>
     );
 }
 

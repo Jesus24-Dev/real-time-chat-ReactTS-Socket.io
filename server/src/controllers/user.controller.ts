@@ -13,4 +13,20 @@ export async function getUser(req: Request, res: Response): Promise<void>{
     } catch(e){
         res.status(400).json({status: "error", error: e})
     }
+    
+}
+
+export async function getUserRooms(req: Request, res: Response): Promise<void> {
+    const {userId} = req.params;
+    try {
+        const user = await User.findByPk(userId)
+        if(!user){  
+            res.status(404).json({status: "error", error: "User not found"})
+            return;
+        }
+        const rooms = await user.getRooms();
+        res.status(200).json({status: "success", rooms})
+    } catch(e){
+        res.status(400).json({status: "error", error: e})
+    }
 }

@@ -10,37 +10,51 @@ function ChatBox() {
   const { socket } = useSocket();
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState<MessageAttributes[]>([]);
+  const [currentRoom, setCurrentRoom] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!socket) return;
+    const roomId = localStorage.getItem('roomId');
+    setCurrentRoom(roomId);
+    
+    if (!socket || !roomId) return;
+
+    // Verificar unión a la sala
+    socket.emit('join_room', roomId);
 
     const handleMessage = (message: MessageAttributes) => {
+      console.log('Mensaje recibido:', message);
       setMessageList(prev => [...prev, message]);
     };
 
-    socket.on('message', handleMessage);
+    socket.on('receive_message', handleMessage);
 
     return () => {
-      socket.off('message', handleMessage); // evita duplicados
+      socket.off('receive_message', handleMessage);
     };
   }, [socket]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-  };
-
   const sendMessage = () => {
+    if (!currentRoom) {
+      console.error('No hay sala seleccionada');
+      return;
+    }
+
     const user = localStorage.getItem('user');
     if (!user) return;
-    const parsedUser = JSON.parse(user);
 
+    const parsedUser = JSON.parse(user);
     const messageData: MessageAttributes = {
       username: parsedUser.username,
       message
     };
 
-    socket?.emit('message', messageData);
-    setMessage(''); 
+    console.log('Enviando mensaje a sala:', currentRoom);
+    socket?.emit('send_message', currentRoom, messageData);
+    setMessage('');
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
   };
 
   return (

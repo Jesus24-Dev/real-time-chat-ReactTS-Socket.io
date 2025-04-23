@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import User from "../models/User";
+import {User} from "../models/relations";
 import { hashPassword, comparePassword, generateToken } from '../utils/authFunctions'
 
 export async function registerUser(req: Request, res: Response): Promise<void>{

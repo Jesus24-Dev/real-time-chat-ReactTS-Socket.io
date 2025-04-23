@@ -1,6 +1,7 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Association } from 'sequelize';
 import sequelize from '../database/database';
 import RoomAttributes from '../types/roomType';
+import User from './User'
 
 class Room extends Model<RoomAttributes> implements RoomAttributes {
     public id!: number;
@@ -9,6 +10,13 @@ class Room extends Model<RoomAttributes> implements RoomAttributes {
     public description!: string | null;
     public readonly createdAt!: Date;
     public readonly updateAt!: Date;
+
+    public addUser!: (user: User) => Promise<void>;
+    public getUsers!: (options?: any) => Promise<User[]>;
+  
+    public static associations: {
+      users: Association<Room, User>;
+    };
 }
 
 Room.init({

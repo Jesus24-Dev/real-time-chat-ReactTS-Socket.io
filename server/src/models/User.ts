@@ -1,6 +1,7 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, BelongsToManyGetAssociationsMixin } from 'sequelize';
 import sequelize from '../database/database';
 import UserAttributes from '../types/userType';
+import Room from './Room';
 
 class User extends Model<UserAttributes> implements UserAttributes {
     public id!: number;
@@ -9,6 +10,8 @@ class User extends Model<UserAttributes> implements UserAttributes {
     public password!: string;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    public getRooms!: BelongsToManyGetAssociationsMixin<Room>;
   }
   
 User.init(

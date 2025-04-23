@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import ChatBox from '../components/ChatBox';
 import CreateRoomForm from '../components/room/CreateRoomForm';
 import RoomList from '../components/room/RoomList';
+import UserRoomList from '../components/room/UserRoomList';
 
 interface UserAttributes {
     id?: number;
@@ -42,6 +43,7 @@ export default function Home(){
                 <ChatBox />
                 <CreateRoomForm />
                 <RoomList/>
+                <UserRoomList/>
             </div>
         </>
     )

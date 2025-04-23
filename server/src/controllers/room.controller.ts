@@ -14,6 +14,7 @@ export async function createRoom(req: Request, res: Response): Promise<void>{
             roomName: roomName,
             description: description
         })
+        await roomCreated.addUser(id_admin)
         res.status(201).json({status: 'success', message: 'Room created successfully', room: roomCreated})    
     } catch (e) {
         res.status(400).json({status: 'error', error: e})
@@ -27,6 +28,22 @@ export async function getAllRooms(req: Request, res: Response): Promise<void>{
         const rooms = await Room.findAll()
         res.status(200).json({status: 'success', rooms})
     } catch (e){
+        res.status(400).json({status: 'error', error: e})
+        return;
+    }
+}
+
+export async function joinRoom(req: Request, res: Response): Promise<void>{
+    const {id_user, id_room} = req.body;
+    try {
+        const room = await Room.findByPk(id_room)
+        if(!room){
+            res.status(404).json({status: 'error', error: 'Room not found'})
+            return;
+        }
+        await room.addUser(id_user)
+        res.status(200).json({status: 'success', message: 'User added to room successfully'})
+    } catch (e) {
         res.status(400).json({status: 'error', error: e})
         return;
     }

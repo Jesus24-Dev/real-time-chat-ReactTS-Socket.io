@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 import RoomData from "../../types/roomDataType";
 import useSocket from '../../hooks/useSocket';
+import JoinRoomButton from './JoinRoomButton';
 
 export default function RoomList() {
     const [room, setRoom] = useState<RoomData[]>([])
@@ -35,6 +36,7 @@ export default function RoomList() {
                         <li key={r.id}>
                             <h2>{r.roomName}</h2>
                             <p>{r.description}</p>
+                            <JoinRoomButton roomId={r.id} />
                         </li>
                     ))}
                 </ul>

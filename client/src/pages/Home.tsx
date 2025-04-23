@@ -1,5 +1,7 @@
 import {useState, useEffect} from 'react'
 import ChatBox from '../components/ChatBox';
+import CreateRoomForm from '../components/room/CreateRoomForm';
+import RoomList from '../components/room/RoomList';
 
 interface UserAttributes {
     id?: number;
@@ -38,6 +40,8 @@ export default function Home(){
                 <h1>Welcome, {user?.username}</h1>
                 <h2>Your email is: {user?.email}</h2>
                 <ChatBox />
+                <CreateRoomForm />
+                <RoomList/>
             </div>
         </>
     )

@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import authRouter from './routes/auth.routes'
 import userRouter from './routes/user.routes'
+import roomRouter from './routes/room.routes'
 import { socketAuth } from './sockets/socketAuth'
 import { socketConnect } from './sockets/socketConnect'
 
@@ -33,5 +34,6 @@ app.get('/api/hello', (req: Request, res: Response) => {
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
+app.use('/api/room', roomRouter)
 
 export default server;

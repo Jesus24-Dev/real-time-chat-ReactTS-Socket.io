@@ -2,11 +2,11 @@ import {Routes, Route} from 'react-router-dom'
 import Auth from './pages/Auth'
 import Home from './pages/Home'
 import ProtectedRoute from './components/ProtectedRoute'
-import useAuth from './hooks/useAuth'
+import { useAuth } from './auth/useAuth'
 
 function App() {
 
-  const {isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
   
   return (
     <Routes>

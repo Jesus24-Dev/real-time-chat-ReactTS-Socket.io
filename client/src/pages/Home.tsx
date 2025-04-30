@@ -3,24 +3,36 @@ import ChatBox from '../components/ChatBox';
 import CreateRoomForm from '../components/room/CreateRoomForm';
 import RoomList from '../components/room/RoomList';
 import UserRoomList from '../components/room/UserRoomList';
-import UserProfile from '../components/UserProfile';
+import Navbar from '../components/layout/Navbar';
+import Button from '../components/ui/Button';
+import ContactList from '../components/users/ContactList';
+import UserList from '../components/users/UserList';
 
 export default function Home() {
     const [error, setError] = useState<string | null>(null);
-    
-    const handleGlobalError = (errorMsg: string) => {
-        setError(errorMsg);
-        setTimeout(() => setError(null), 5000);
-    };
+    const [activeSection, setActiveSection] = useState('rooms');
 
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header/Navbar */}
             <header className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <h1 className="text-xl font-bold text-amber-600">Chat App</h1>
-                    <UserProfile onError={handleGlobalError} />
-                </div>
+                <Navbar>
+                <Button 
+                        label="Rooms" 
+                        type="button"
+                        onClick={() => setActiveSection('rooms')}
+                    />
+                    <Button 
+                        label="Contacts" 
+                        type="button"
+                        onClick={() => setActiveSection('contacts')}
+                    />
+                    <Button 
+                        label="Find people" 
+                        type="button"
+                        onClick={() => setActiveSection('people')}
+                    />
+                </Navbar>
             </header>
 
             {/* Notificación de error global */}
@@ -46,9 +58,21 @@ export default function Home() {
             <main className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Sección de Salas */}
                 <div className="lg:col-span-1 space-y-6">
-                    <CreateRoomForm />
-                    <UserRoomList />
-                    <RoomList />
+                {activeSection === 'rooms' && (
+                        <>
+                            <CreateRoomForm />
+                            <UserRoomList />
+                            <RoomList />
+                        </>
+                    )}
+                    
+                    {activeSection === 'contacts' && (
+                        <ContactList />
+                    )}
+                    
+                    {activeSection === 'people' && (
+                        <UserList />
+                    )}
                 </div>
 
                 {/* Chat Principal */}

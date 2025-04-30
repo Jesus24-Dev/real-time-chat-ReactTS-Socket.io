@@ -4,6 +4,7 @@ export function socketRoom(socket: any, io: any) {
     socket.on('join_room', (roomId: string, userId?: number) => { // Cambiado a string
         console.log(`Usuario ${userId} uniéndose a sala ${roomId}`);
         socket.join(roomId);
+        io.emit('room_created', roomId);
     });
 
     socket.on('leave_room', (roomId: string, userId: number) => { // Cambiado a string

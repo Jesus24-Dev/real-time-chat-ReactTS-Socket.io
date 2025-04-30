@@ -4,18 +4,17 @@ import Button from './ui/Button';
 import MessageAttributes from '../types/messageType';
 import Message from './ui/Message';
 import FormField from './ui/FormField';
+import { useRoom } from '../hooks/useRoom';
 
 export default function ChatBox() {
   const { socket } = useSocket();
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState<MessageAttributes[]>([]);
-  const [currentRoom, setCurrentRoom] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<string | null>(null)
+  const { roomId } = useRoom();
 
   useEffect(() => {
-    const roomId = localStorage.getItem('roomId');
-    setCurrentRoom(roomId);
-    
+
     if (!socket || !roomId) return;
 
     // Verificar unión a la sala
@@ -31,10 +30,10 @@ export default function ChatBox() {
     return () => {
       socket.off('receive_message', handleMessage);
     };
-  }, [socket]);
+  }, [socket, roomId]);
 
   const sendMessage = () => {
-    if (!currentRoom) {
+    if (!roomId) {
       console.error('No hay sala seleccionada');
       return;
     }
@@ -49,8 +48,8 @@ export default function ChatBox() {
       message
     };
 
-    console.log('Enviando mensaje a sala:', currentRoom);
-    socket?.emit('send_message', currentRoom, messageData);
+    console.log('Enviando mensaje a sala:', roomId);
+    socket?.emit('send_message', roomId, messageData);
     setMessage('');
   };
 
@@ -66,7 +65,7 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden h-96">
       {/* Chat Header */}
       <div className="bg-amber-500 px-4 py-3 flex items-center">
         <svg 
@@ -82,7 +81,7 @@ export default function ChatBox() {
           />
         </svg>
         <h3 className="text-white font-semibold">
-          {currentRoom ? `Room: ${currentRoom}` : "Select a room to chat"}
+          {roomId ? `Room: ${roomId}` : "Select a room to chat"}
         </h3>
       </div>
 

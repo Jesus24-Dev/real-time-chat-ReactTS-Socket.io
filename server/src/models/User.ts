@@ -4,7 +4,7 @@ import UserAttributes from '../types/userType';
 import Room from './Room';
 
 class User extends Model<UserAttributes> implements UserAttributes {
-    public id!: number;
+    public id!: string;
     public username!: string;
     public email!: string;
     public password!: string;
@@ -17,8 +17,8 @@ class User extends Model<UserAttributes> implements UserAttributes {
 User.init(
     {
       id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
       username: {

@@ -4,6 +4,7 @@ import { FormData } from '../types/formDataType';
 import { fetchAuth } from '../utils/fetchAuth';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
+import { useAuth } from '../auth/useAuth';
 
 export default function Auth() {
     const [formData, setFormData] = useState<FormData>({email: '', password: '', username: ''});
@@ -11,24 +12,30 @@ export default function Auth() {
     const [message, setMessage] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'login' | 'register'>('login'); // Nuevo estado para controlar la pestaña activa
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>, isRegister: boolean) => {
         event.preventDefault();
         fetchAuth(isRegister, formData).then((response) => {
-            if(response?.status === 'error'){
-                setError(response.error || 'Ocurrió un error');
-                setMessage(null);
-            } else {
-                setMessage(response?.message || (isRegister ? '¡Registro exitoso!' : 'Inicio de sesión exitoso'));
-                setError(null);
-                setFormData({email: '', password: '', username: ''}); // Limpiar formulario
-                
-                if(isRegister) {
-                    setActiveTab('login'); // Cambiar automáticamente a login después de registrar
+            if(response){
+                if(response?.status === 'error'){
+                    setError(response.error || 'An error ocurred');
+                    setMessage(null);
                 } else {
-                    navigate('/home');
+                    setMessage(response.message || (isRegister ? 'Register success!' : 'User logged succesfully'));
+                    setError(null);
+                    setFormData({email: '', password: '', username: ''});
+                    
+                    if(isRegister) {
+                        setActiveTab('login'); 
+                    } else {
+                        if(response.token){
+                            login(response.token) 
+                            navigate('/home');
+                        }         
+                    }
                 }
-            }
+            }         
         });
     };
 

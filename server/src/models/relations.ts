@@ -5,7 +5,24 @@ import Contact from "./Contact";
 Room.belongsToMany(User, { through: 'RoomUser' });
 User.belongsToMany(Room, { through: 'RoomUser' });
 
-User.belongsToMany(User, { through: Contact, foreignKey: 'id_user', as: 'contacts' });
-Contact.belongsTo(User, { foreignKey: 'id_user', as: 'user' });
+User.hasMany(Contact, {
+    foreignKey: 'id_user',
+    as: 'userContacts' 
+});
+
+User.hasMany(Contact, {
+    foreignKey: 'id_contact',
+    as: 'contactOfUsers'
+});
+
+Contact.belongsTo(User, {
+    foreignKey: 'id_user',
+    as: 'user' 
+});
+
+Contact.belongsTo(User, {
+    foreignKey: 'id_contact',
+    as: 'contact' 
+});
 
 export {Room, User, Contact}

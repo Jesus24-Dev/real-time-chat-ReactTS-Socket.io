@@ -3,7 +3,7 @@ import sequelize from '../database/database'
 export async function connectToDatabase(): Promise<void>{
     try {
         await sequelize.authenticate();
-        await sequelize.sync();
+        await sequelize.sync({alter: true});
         console.log('Connection has been established successfully.');
       } catch (error) {
         console.error('Error to connect with database', error);

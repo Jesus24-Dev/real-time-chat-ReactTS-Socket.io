@@ -5,6 +5,7 @@ import { fetchAuth } from '../utils/fetchAuth';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import { useAuth } from '../auth/useAuth';
+import useSocket from '../hooks/useSocket';
 
 export default function Auth() {
     const [formData, setFormData] = useState<FormData>({email: '', password: '', username: ''});
@@ -13,6 +14,7 @@ export default function Auth() {
     const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
     const navigate = useNavigate();
     const { login } = useAuth();
+    const {socket} = useSocket();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>, isRegister: boolean) => {
         event.preventDefault();
@@ -31,6 +33,7 @@ export default function Auth() {
                     setActiveTab('login'); 
                 } else {
                     if (response.token) {
+                        socket?.emit('register_user', response.userId);
                         login(response.token);
                         navigate('/home');
                     } else {

@@ -7,6 +7,7 @@ import authRouter from './routes/auth.routes'
 import userRouter from './routes/user.routes'
 import roomRouter from './routes/room.routes'
 import contactRouter from './routes/contact.routes'
+import privateChatRouter from './routes/private_chat.routes'
 import { socketAuth } from './sockets/socketAuth'
 import { socketConnect } from './sockets/socketConnect'
 
@@ -37,5 +38,6 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/room', roomRouter)
 app.use('/api/contact', contactRouter)
+app.use('/api/private', privateChatRouter)
 
 export default server;

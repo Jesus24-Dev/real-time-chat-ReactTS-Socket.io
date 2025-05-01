@@ -7,22 +7,22 @@ User.belongsToMany(Room, { through: 'RoomUser' });
 
 User.hasMany(Contact, {
     foreignKey: 'id_user',
-    as: 'userContacts' 
+    as: 'ownedContacts' 
 });
 
 User.hasMany(Contact, {
     foreignKey: 'id_contact',
-    as: 'contactOfUsers'
+    as: 'contactInLists'
 });
 
 Contact.belongsTo(User, {
     foreignKey: 'id_user',
-    as: 'user' 
+    as: 'ownerUser' 
 });
 
 Contact.belongsTo(User, {
     foreignKey: 'id_contact',
-    as: 'contact' 
+    as: 'contactUser' 
 });
 
 export {Room, User, Contact}

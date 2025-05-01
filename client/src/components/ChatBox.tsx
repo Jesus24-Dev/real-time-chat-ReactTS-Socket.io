@@ -11,7 +11,7 @@ export default function ChatBox() {
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState<MessageAttributes[]>([]);
   const [currentUser, setCurrentUser] = useState<string | null>(null)
-  const { roomId } = useRoom();
+  const { roomId, roomName } = useRoom();
 
   useEffect(() => {
 
@@ -48,7 +48,6 @@ export default function ChatBox() {
       message
     };
 
-    console.log('Enviando mensaje a sala:', roomId);
     socket?.emit('send_message', roomId, messageData);
     setMessage('');
   };
@@ -81,7 +80,7 @@ export default function ChatBox() {
           />
         </svg>
         <h3 className="text-white font-semibold">
-          {roomId ? `Room: ${roomId}` : "Select a room to chat"}
+          {roomId ? `Room: ${roomName}` : "Select a room to chat"}
         </h3>
       </div>
 

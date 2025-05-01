@@ -1,6 +1,7 @@
 import User from "./User";
 import Room from './Room'
 import Contact from "./Contact";
+import PrivateMessage from "./PrivateMessage";
 
 Room.belongsToMany(User, { 
     through: 'RoomUser',
@@ -32,4 +33,10 @@ Contact.belongsTo(User, {
     as: 'contactUser' 
 });
 
-export {Room, User, Contact}
+User.hasMany(PrivateMessage, { foreignKey: 'senderId', as: 'sentMessages' });
+User.hasMany(PrivateMessage, { foreignKey: 'receiverId', as: 'receivedMessages' });
+
+PrivateMessage.belongsTo(User, { foreignKey: 'senderId', as: 'sentUser' })
+PrivateMessage.belongsTo(User, { foreignKey: 'receiverId', as: 'receivedUser' })
+
+export {Room, User, Contact, PrivateMessage}

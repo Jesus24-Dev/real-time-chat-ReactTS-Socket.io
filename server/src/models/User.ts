@@ -8,6 +8,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
     public username!: string;
     public email!: string;
     public password!: string;
+    public status!: 'offline' | 'online';
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
@@ -34,6 +35,10 @@ User.init(
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+      }, 
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: 'offline'
       },
     },
     {

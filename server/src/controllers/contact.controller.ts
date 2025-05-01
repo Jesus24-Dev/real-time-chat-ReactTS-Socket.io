@@ -38,7 +38,7 @@ export async function getAllContacts(req: Request, res: Response){
         });
 
         const formattedContacts = contacts.map(contact => ({
-            contactId: contact.id_contact,
+            id: contact.id_contact,
             username: contact.contactUser?.username,
             status: contact.contactUser?.status
         }));

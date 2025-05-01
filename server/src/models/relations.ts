@@ -2,8 +2,15 @@ import User from "./User";
 import Room from './Room'
 import Contact from "./Contact";
 
-Room.belongsToMany(User, { through: 'RoomUser' });
-User.belongsToMany(Room, { through: 'RoomUser' });
+Room.belongsToMany(User, { 
+    through: 'RoomUser',
+    uniqueKey: 'room_user_unique' 
+  });
+  
+  User.belongsToMany(Room, { 
+    through: 'RoomUser',
+    uniqueKey: 'room_user_unique'
+  });
 
 User.hasMany(Contact, {
     foreignKey: 'id_user',

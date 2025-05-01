@@ -27,7 +27,7 @@ export default function ContactList() {
             throw new Error('Failed to fetch users');
         }
            const data = await response.json();
-
+          console.log(data)
            if(data.error) {
             setError(data.error)
             return

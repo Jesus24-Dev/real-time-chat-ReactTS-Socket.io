@@ -52,7 +52,7 @@ const UserList = () => {
             {users.length > 0 ? (
                 <div className="space-y-4">
                     {users.map((user) => (                      
-                            <UserCard key={user.id} username={user.username} status={user.status} />
+                            <UserCard key={user.id} username={user.username} status={user.status} id={user.id}/>
                     ))}
                 </div>
             ) : (

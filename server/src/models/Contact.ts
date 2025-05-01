@@ -6,6 +6,7 @@ class Contact extends Model<ContactAttributes> implements ContactAttributes {
     public id!: string;
     public id_user!: string;
     public id_contact!: string;
+    public contactUser?: { username: string; status: string; } | undefined;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }

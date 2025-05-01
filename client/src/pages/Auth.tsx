@@ -10,7 +10,7 @@ export default function Auth() {
     const [formData, setFormData] = useState<FormData>({email: '', password: '', username: ''});
     const [error, setError] = useState<string | null>(null);
     const [message, setMessage] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<'login' | 'register'>('login'); // Nuevo estado para controlar la pestaña activa
+    const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
     const navigate = useNavigate();
     const { login } = useAuth();
 
@@ -18,21 +18,23 @@ export default function Auth() {
         event.preventDefault();
         fetchAuth(isRegister, formData).then((response) => {
             if(response){
-                if(response?.status === 'error'){
+                if (response?.status === 'error') {
                     setError(response.error || 'An error ocurred');
                     setMessage(null);
+                    return;
+                }
+                
+                setMessage(response.message || (isRegister ? 'Register success!' : 'User logged succesfully'));
+                setError(null);
+                setFormData({email: '', password: '', username: ''});
+                if (isRegister) {
+                    setActiveTab('login'); 
                 } else {
-                    setMessage(response.message || (isRegister ? 'Register success!' : 'User logged succesfully'));
-                    setError(null);
-                    setFormData({email: '', password: '', username: ''});
-                    
-                    if(isRegister) {
-                        setActiveTab('login'); 
+                    if (response.token) {
+                        login(response.token);
+                        navigate('/home');
                     } else {
-                        if(response.token){
-                            login(response.token) 
-                            navigate('/home');
-                        }         
+                        setError('No token received');
                     }
                 }
             }         

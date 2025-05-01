@@ -9,7 +9,7 @@ export default function UserRoomList(){
     const [room, setRoom] = useState<RoomData[]>([])
     const [userId, setUserId] = useState<number | null>(null)
     const {socket} = useSocket()
-    const {updateRoomId} = useRoom();
+    const {updateRoomId, updateRoomName} = useRoom();
 
     useEffect(() => {
         const user = localStorage.getItem('user');
@@ -48,6 +48,7 @@ export default function UserRoomList(){
     const joinRoom = (roomId: number | undefined) => {
         if (roomId){
             const roomIdStr = roomId.toString();
+            updateRoomName('roomIdStr')
             updateRoomId(roomIdStr);
             socket?.emit('join_room', roomIdStr, userId);    
         } 

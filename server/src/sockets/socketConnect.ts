@@ -2,11 +2,6 @@ import {Socket} from 'socket.io'
 import { socketRoom } from './socketRoom';
 import { socketUser } from './socketUser';
 
-interface MessageAttributes {
-    username: string;
-    message: string;
-}
-
 export function socketConnect(io: any){
     io.on('connection', (socket: Socket) => {        
         socketRoom(socket, io);

@@ -1,5 +1,4 @@
-import { FormData } from "../types/formDataType";
-
+import { FormData } from './../types/formDataType';
 interface AuthResponse {
     status: string;
     message?: string;
@@ -33,6 +32,7 @@ export async function fetchAuth(isRegister: boolean = false, form: FormData){
             status: data.status,
             error: data.error,
         }
+        console.log('Error en la respuesta del servidor:', response.error);
         return response;
     }               
 }

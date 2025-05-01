@@ -11,6 +11,7 @@ import UserList from '../components/users/UserList';
 export default function Home() {
     const [error, setError] = useState<string | null>(null);
     const [activeSection, setActiveSection] = useState('rooms');
+    const [activeRoom, setActiveRoom] = useState<'myRooms' | 'rooms'>('rooms')
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -61,8 +62,19 @@ export default function Home() {
                 {activeSection === 'rooms' && (
                         <>
                             <CreateRoomForm />
-                            <UserRoomList />
-                            <RoomList />
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xl font-semibold text-gray-800">Rooms</h2>
+                                <Button 
+                                    label={activeRoom === 'myRooms' ? 'All Rooms' : 'My Rooms'} 
+                                    type="button"
+                                    onClick={() => setActiveRoom(activeRoom === 'myRooms' ? 'rooms' : 'myRooms')}
+                                />
+                                </div>
+                            {activeRoom === 'myRooms' ? (
+                                <UserRoomList />
+                            ) : (
+                                <RoomList />
+                            )}
                         </>
                     )}
                     

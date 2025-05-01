@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {Contact} from "../models/relations";
+import {Contact, User} from "../models/relations";
 
 export async function createContact(req: Request, res: Response){
     const {id_user, id_contact} = req.body;
@@ -29,10 +29,22 @@ export async function getAllContacts(req: Request, res: Response){
         const contacts = await Contact.findAll({
             where: {
                 id_user: id_user
-            }
-        })
-        res.status(200).json({status: 'success', contacts})
+            },
+            include: [{
+                model: User,
+                as: 'contactUser',  
+                attributes: ['id', 'username', 'status'], 
+            }]
+        });
+
+        const formattedContacts = contacts.map(contact => ({
+            contactId: contact.id_contact,
+            username: contact.contactUser?.username,
+            status: contact.contactUser?.status
+        }));
+        res.status(200).json({ status: 'success', contacts: formattedContacts });
     } catch (e){
+        console.log('hubo un error', e)
         res.status(400).json({status: 'error', error: e})
     }
 }

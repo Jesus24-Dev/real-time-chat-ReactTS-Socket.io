@@ -45,12 +45,12 @@ export default function ContactList() {
            if (!response.ok) {
             throw new Error('Failed to fetch users');
         }
+        console.log(response)
            const data = await response.json();
            if(data.error) {
             setError(data.error)
             return
            } 
-           console.log(data.contacts)
            setContacts(data.contacts);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';

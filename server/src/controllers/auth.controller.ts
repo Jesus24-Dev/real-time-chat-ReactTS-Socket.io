@@ -5,7 +5,7 @@ import { hashPassword, comparePassword, generateToken } from '../utils/authFunct
 export async function registerUser(req: Request, res: Response): Promise<void>{
     const {username, email, password} = req.body;
     const hashedPassword = await hashPassword(password);
-
+    
     try {
         const userCreated = await User.create({
             username,
@@ -14,6 +14,7 @@ export async function registerUser(req: Request, res: Response): Promise<void>{
         })
         res.status(201).json({status: 'success', message: "User created succesfullly"})
     } catch(e){
+        console.log(e)
         res.status(400).json({status: 'error', error: e})
     }
 }

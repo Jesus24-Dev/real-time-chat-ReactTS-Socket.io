@@ -1,5 +1,7 @@
 import {Request, Response} from 'express'
+import {Op} from 'sequelize'
 import {Room} from "../models/relations";
+import sequelize from '../database/database';
 
 export async function createRoom(req: Request, res: Response): Promise<void>{
     const {id_admin, roomName, description} = req.body;
@@ -25,7 +27,20 @@ export async function createRoom(req: Request, res: Response): Promise<void>{
 
 export async function getAllRooms(req: Request, res: Response): Promise<void>{
     try {
-        const rooms = await Room.findAll()
+        const {userId} = req.params;
+        if(!userId){
+            return;
+        }
+        const rooms = await Room.findAll({
+            where: {
+                id: {
+                    [Op.notIn]: sequelize.literal(
+                        `(SELECT "roomId" FROM "RoomUser" WHERE "userId" = '${userId}')`
+                    )
+                }
+            },
+            attributes: ['id', 'roomName'],
+        });
         res.status(200).json({status: 'success', rooms})
     } catch (e){
         res.status(400).json({status: 'error', error: e})
@@ -44,6 +59,7 @@ export async function joinRoom(req: Request, res: Response): Promise<void>{
         await room.addUser(id_user)
         res.status(200).json({status: 'success', message: 'User added to room successfully'})
     } catch (e) {
+        console.log(e)
         res.status(400).json({status: 'error', error: e})
         return;
     }

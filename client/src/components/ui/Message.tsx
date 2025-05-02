@@ -1,6 +1,8 @@
+
 import MessageAttributes from '../../types/messageType';
 
-export default function Message({ username, message, isCurrentUser = false }: MessageAttributes) {
+export default function Message({ receivedUserRoom, content, isCurrentUser = false }: MessageAttributes) {
+
     return (
       <div className={`mb-3 flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
         <div
@@ -11,9 +13,9 @@ export default function Message({ username, message, isCurrentUser = false }: Me
           } shadow-sm`}
         >
           <strong className={`block text-sm ${isCurrentUser ? 'text-amber-800' : 'text-gray-600'}`}>
-            {username}
+            {receivedUserRoom.username}
           </strong>
-          <p className="mt-1 text-gray-700">{message}</p>
+          <p className="mt-1 text-gray-700">{content}</p>
         </div>
       </div>
     );

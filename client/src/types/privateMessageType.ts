@@ -1,10 +1,10 @@
-export default interface MessageAttributes {
+export default interface PrivateMessageAttributes {
     content: string;
-    receivedUserRoom: {
+    receivedUser: {
         id: string;
         username: string;
     }
-    receivedUser?: {
+    sentUser?: {
         id: string;
         username: string;
     }

@@ -4,8 +4,8 @@ import RoomAttributes from '../types/roomType';
 import User from './User'
 
 class Room extends Model<RoomAttributes> implements RoomAttributes {
-    public id!: number;
-    public id_admin!: number;
+    public id!: string;
+    public id_admin!: string;
     public roomName!: string;
     public description!: string | null;
     public readonly createdAt!: Date;
@@ -21,12 +21,12 @@ class Room extends Model<RoomAttributes> implements RoomAttributes {
 
 Room.init({
     id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
     id_admin: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
     },
     roomName: {

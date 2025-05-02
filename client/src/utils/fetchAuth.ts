@@ -1,12 +1,15 @@
-import { FormData } from "../types/formDataType";
+import { FormData } from './../types/formDataType';
 
 interface AuthResponse {
     status: string;
     message?: string;
     error?: string;
+    token?: string;
+    userId?: string;
 }
 
 export async function fetchAuth(isRegister: boolean = false, form: FormData){
+
     const url = isRegister ? 'http://localhost:3030/api/auth/register' : 'http://localhost:3030/api/auth/login'
     const response = await fetch(url, {
         method: 'POST',
@@ -24,6 +27,8 @@ export async function fetchAuth(isRegister: boolean = false, form: FormData){
         const response: AuthResponse = {
             status: data.status,
             message: data.message,
+            token: data.token,
+            userId: !isRegister ? data.user.id : null
         }
         return response;
     } else if (data.status === 'error'){
@@ -31,6 +36,7 @@ export async function fetchAuth(isRegister: boolean = false, form: FormData){
             status: data.status,
             error: data.error,
         }
+        console.log('Error en la respuesta del servidor:', response.error);
         return response;
     }               
 }

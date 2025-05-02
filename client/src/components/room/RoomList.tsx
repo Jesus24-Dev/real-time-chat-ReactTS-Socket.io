@@ -9,8 +9,15 @@ export default function RoomList() {
     const { socket } = useSocket();
 
     useEffect(() => {
+        const user = localStorage.getItem('user');
+        const userId = user ? JSON.parse(user).id : null;
+
+        if(!userId){
+            console.error('User ID not found in local Storage')
+        }
+
         const fetchRooms = async () => {
-            const response = await fetch('http://localhost:3030/api/room/all')
+            const response = await fetch(`http://localhost:3030/api/room/all/${userId}`)
             const data = await response.json()
             if (data.status === 'success') {
                 setRoom(data.rooms)

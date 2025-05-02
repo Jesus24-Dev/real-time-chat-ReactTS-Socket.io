@@ -4,10 +4,11 @@ import UserAttributes from '../types/userType';
 import Room from './Room';
 
 class User extends Model<UserAttributes> implements UserAttributes {
-    public id!: number;
+    public id!: string;
     public username!: string;
     public email!: string;
     public password!: string;
+    public status!: 'offline' | 'online';
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
@@ -17,8 +18,8 @@ class User extends Model<UserAttributes> implements UserAttributes {
 User.init(
     {
       id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
       username: {
@@ -34,6 +35,10 @@ User.init(
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+      }, 
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: 'offline'
       },
     },
     {

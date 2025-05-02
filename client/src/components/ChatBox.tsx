@@ -2,28 +2,90 @@ import { useState, useEffect } from 'react';
 import useSocket from '../hooks/useSocket'; // asegúrate de importar correctamente
 import Button from './ui/Button';
 import MessageAttributes from '../types/messageType';
+import PrivateMessageAttributes from '../types/privateMessageType';
 import Message from './ui/Message';
 import FormField from './ui/FormField';
+import { useRoom } from '../hooks/useRoom';
 
 export default function ChatBox() {
   const { socket } = useSocket();
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState<MessageAttributes[]>([]);
-  const [currentRoom, setCurrentRoom] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<string | null>(null)
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const { roomId, roomName } = useRoom();
 
   useEffect(() => {
-    const roomId = localStorage.getItem('roomId');
-    setCurrentRoom(roomId);
-    
+    if (!roomId) return;
+
+    const fetchMessages = async () => {
+      const user = localStorage.getItem('user');
+      if (!user) return;
+
+      const parsedUser = JSON.parse(user);
+      const isPrivate = roomId.includes('_'); 
+      setCurrentUser(parsedUser.username);
+      try {
+        const endpoint = isPrivate
+          ? `http://localhost:3030/api/private/${parsedUser.id}/${roomId.split('_').find(id => id !== parsedUser.id)}`
+          : `http://localhost:3030/api/room_chat/${roomId}`;
+
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const data = await response.json();
+
+        if(!isPrivate){
+            const messages = data.messages.map((msg: MessageAttributes) => ({
+            content: msg.content,
+            receivedUserRoom: {
+              id: msg.receivedUserRoom.id,
+              username: msg.receivedUserRoom.username
+            }
+          }));
+          setMessageList(messages)
+        } else {
+          const messages = data.messages.map((msg: PrivateMessageAttributes) => ({
+            content: msg.content,
+            receivedUserRoom: {
+              id: msg.sentUser?.id,
+              username: msg.sentUser?.username,
+            }
+          }));
+          setMessageList(messages)
+        }
+
+        
+        
+      } catch (error) {
+        console.error("Error loading messages:", error);
+      }
+    };
+
+    fetchMessages();
+  }, [roomId]);
+
+  // Manejo de sockets
+  useEffect(() => {
     if (!socket || !roomId) return;
 
-    // Verificar unión a la sala
-    socket.emit('join_room', roomId);
-
-    const handleMessage = (message: MessageAttributes) => {
-      console.log('Mensaje recibido:', message);
-      setMessageList(prev => [...prev, message]);
+    socket.emit('join_room', roomId, roomName);
+    const handleMessage = (newMessage: { 
+      content: string; 
+      username: string; 
+      senderId: string;
+      isPrivate: boolean;
+    }) => {
+      setMessageList(prev => [...prev, {
+        content: newMessage.content,
+        receivedUserRoom: {
+          id: newMessage.senderId,
+          username: newMessage.username
+        }
+      }]);
     };
 
     socket.on('receive_message', handleMessage);
@@ -31,29 +93,11 @@ export default function ChatBox() {
     return () => {
       socket.off('receive_message', handleMessage);
     };
-  }, [socket]);
 
-  const sendMessage = () => {
-    if (!currentRoom) {
-      console.error('No hay sala seleccionada');
-      return;
-    }
+    
+  }, [socket, roomId, roomName]);
 
-    const user = localStorage.getItem('user');
-    if (!user) return;
-
-    const parsedUser = JSON.parse(user);
-    setCurrentUser(parsedUser.username)
-    const messageData: MessageAttributes = {
-      username: parsedUser.username,
-      message
-    };
-
-    console.log('Enviando mensaje a sala:', currentRoom);
-    socket?.emit('send_message', currentRoom, messageData);
-    setMessage('');
-  };
-
+  // Auto-scroll
   useEffect(() => {
     const container = document.querySelector('.overflow-y-auto');
     if (container) {
@@ -61,12 +105,35 @@ export default function ChatBox() {
     }
   }, [messageList]);
 
+  const sendMessage = () => {
+    if (!roomId || !message.trim()) return;
+
+    const user = localStorage.getItem('user');
+    if (!user) return;
+
+    const parsedUser = JSON.parse(user);
+    const isPrivate = roomId.includes('_');
+
+    const messageData = {
+      roomId,
+      content: message,
+      username: parsedUser.username,
+      senderId: parsedUser.id,
+      isPrivate,
+      receiverId: isPrivate ? roomId.split('_').find(id => id !== parsedUser.id) : undefined
+    };
+
+    socket?.emit('send_message', messageData);
+    setMessage('');
+    
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden h-96">
       {/* Chat Header */}
       <div className="bg-amber-500 px-4 py-3 flex items-center">
         <svg 
@@ -82,7 +149,7 @@ export default function ChatBox() {
           />
         </svg>
         <h3 className="text-white font-semibold">
-          {currentRoom ? `Room: ${currentRoom}` : "Select a room to chat"}
+          {roomId ? `Room: ${roomName}` : "Select a room to chat"}
         </h3>
       </div>
 
@@ -92,9 +159,9 @@ export default function ChatBox() {
           messageList.map((msg, index) => (
             <Message 
               key={index} 
-              username={msg.username} 
-              message={msg.message} 
-              isCurrentUser={msg.username === currentUser} 
+              receivedUserRoom={msg.receivedUserRoom} 
+              content={msg.content} 
+              isCurrentUser={msg.receivedUserRoom.username === currentUser} 
             />
           ))
         ) : (

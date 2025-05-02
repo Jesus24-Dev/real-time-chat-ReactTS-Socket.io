@@ -1,12 +1,12 @@
-import MessageAttributes from "../types/messageType"
+import {PrivateMessage, RoomMessage} from '../models/relations'
 
 export function socketRoom(socket: any, io: any) {
-    socket.on('join_room', (roomId: string, userId?: number) => { // Cambiado a string
-        console.log(`Usuario ${userId} uniéndose a sala ${roomId}`);
+    socket.on('join_room', (roomId: string, roomName?: string) => { 
         socket.join(roomId);
+        io.emit('room_created', roomId);
     });
 
-    socket.on('leave_room', (roomId: string, userId: number) => { // Cambiado a string
+    socket.on('leave_room', (roomId: string, userId: number) => { 
         socket.leave(roomId);
     });
 
@@ -14,8 +14,28 @@ export function socketRoom(socket: any, io: any) {
         io.emit('room_created')
     })
 
-    socket.on('send_message', (roomId: string, message: MessageAttributes) => { // Cambiado a string
-        console.log(`Mensaje recibido en sala ${roomId}:`, message);
-        io.to(roomId).emit('receive_message', message);
-    });
+    socket.on('send_message', async (messageData: {
+        roomId: string;
+        content: string;
+        senderId: string;
+        isPrivate: boolean; 
+        receiverId?: string;
+        username?: string;
+      }) => {
+        const { roomId, content, senderId, isPrivate, receiverId, username } = messageData;
+      
+        if (isPrivate) {
+          await PrivateMessage.create({ senderId, receiverId: receiverId!, content });
+        } else {
+          await RoomMessage.create({ senderId, roomId, content });
+        }
+      
+        io.to(roomId).emit('receive_message', {
+          content,
+          username,
+          senderId,
+          isPrivate, 
+        });
+      });
+
 }

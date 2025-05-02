@@ -25,11 +25,11 @@ export default function Button({
       disabled={disabled}
       className={`
           px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out
-          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400
+          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 
           ${
             disabled
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-amber-400 text-gray-800 hover:bg-amber-500 active:bg-amber-600"
+              : "bg-amber-400 text-gray-800 hover:bg-amber-500 active:bg-amber-600 cursor-pointer"
           }
           shadow-sm ${!disabled && "hover:shadow-md"}
         `}

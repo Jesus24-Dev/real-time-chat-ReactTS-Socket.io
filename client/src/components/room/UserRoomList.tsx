@@ -3,11 +3,13 @@ import RoomData from "../../types/roomDataType";
 import useSocket from '../../hooks/useSocket';
 import Button from '../ui/Button';
 import Room from '../ui/Room';
+import { useRoom } from '../../hooks/useRoom';
 
 export default function UserRoomList(){
     const [room, setRoom] = useState<RoomData[]>([])
     const [userId, setUserId] = useState<number | null>(null)
     const {socket} = useSocket()
+    const {updateRoomId, updateRoomName} = useRoom();
 
     useEffect(() => {
         const user = localStorage.getItem('user');
@@ -43,12 +45,12 @@ export default function UserRoomList(){
         fetchRooms();
     }, [socket])
 
-    const joinRoom = (roomId: number | undefined) => {
+    const joinRoom = (roomId: number | undefined, roomName: string) => {
         if (roomId){
             const roomIdStr = roomId.toString();
-            localStorage.setItem('roomId', roomIdStr);
-            socket?.emit('join_room', roomIdStr, userId);
-            console.log(`Uniéndose a sala: ${roomIdStr}`);
+            updateRoomName(roomName)
+            updateRoomId(roomIdStr);
+            socket?.emit('join_room', roomIdStr, userId);    
         } 
     }
 
@@ -82,7 +84,7 @@ export default function UserRoomList(){
                                 <Button 
                                     type="button" 
                                     label="Start Conversation" 
-                                    onClick={() => joinRoom(r.id)}
+                                    onClick={() => joinRoom(r.id, r.roomName)}
                                 />
                             </div>
                         </div>

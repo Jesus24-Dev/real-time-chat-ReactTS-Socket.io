@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import Button from '../ui/Button';
+import useSocket from '../../hooks/useSocket';
 
 type JoinRoomButtonProps = {
     roomId: number | undefined;  
@@ -8,6 +9,7 @@ type JoinRoomButtonProps = {
 export default function JoinRoomButton({roomId}: JoinRoomButtonProps) {
 
     const [userId, setUserId] = useState<number | null>(null);
+    const { socket } = useSocket();
 
     useEffect(() => {
         const user = localStorage.getItem('user');
@@ -36,6 +38,7 @@ export default function JoinRoomButton({roomId}: JoinRoomButtonProps) {
             .then(data => {
                 if(data.status === 'success'){
                     console.log('User added to room successfully')
+                    socket?.emit('join_room', roomId, userId);   
                 } else {
                     console.error(data.error || 'An error occurred')
                 }

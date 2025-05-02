@@ -1,6 +1,6 @@
 export default interface RoomAttributes {
-    id?: number;
-    id_admin: number;
+    id?: string;
+    id_admin: string;
     roomName: string;
     description: string | null;
     createdAt?: Date;

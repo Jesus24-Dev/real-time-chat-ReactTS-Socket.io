@@ -4,7 +4,7 @@ import {createRoom, getAllRooms, joinRoom} from '../controllers/room.controller'
 const router = Router();
 
 router.post('/create', createRoom);
-router.get('/all', getAllRooms);
+router.get('/all/:userId', getAllRooms);
 router.post('/joinRoom', joinRoom);
 
 

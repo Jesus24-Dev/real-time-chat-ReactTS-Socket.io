@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
+import {useAuth} from '../auth/useAuth';
 
 interface UserAttributes {
     id: number;
@@ -7,14 +8,11 @@ interface UserAttributes {
     email: string;
 }
 
-interface UserProfileProps {
-    onError: (error: string) => void;
-}
-
-export default function UserProfile({ onError }: UserProfileProps) {
+export default function UserProfile() {
     const [user, setUser] = useState<UserAttributes | null>(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const {logout} = useAuth();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -23,7 +21,6 @@ export default function UserProfile({ onError }: UserProfileProps) {
                 const userId = user ? JSON.parse(user).id : null;
 
                 if (!userId) {
-                    onError("No se encontró sesión activa");
                     navigate('/');
                     return;
                 }
@@ -34,26 +31,33 @@ export default function UserProfile({ onError }: UserProfileProps) {
                 const data = await response.json();
                 if (data.status === 'success') {
                     setUser(data.user);
-                } else {
-                    onError(data.error || "Error desconocido");
-                }
+                } 
             } catch (err) {
-                onError(err instanceof Error ? err.message : "Error al cargar perfil");
+                console.error(err);
+                if (err instanceof Error) {
+                    alert(`Error: ${err.message}`);
+                } else {
+                    alert('Error desconocido al obtener datos del usuario');
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUserData();
-    }, [navigate, onError]);
+    }, [navigate]);
 
     const handleLogout = () => {
         try {
-            localStorage.removeItem('user');
-            localStorage.removeItem('roomId');
+            logout();
             navigate('/');
         } catch (err) {
-            onError(`Error al cerrar sesión: ${err}`);
+            console.error(err);
+            if (err instanceof Error) {
+                alert(`Error: ${err.message}`);
+            } else {
+                alert('Error desconocido al cerrar sesión');
+            }
         }
     };
 

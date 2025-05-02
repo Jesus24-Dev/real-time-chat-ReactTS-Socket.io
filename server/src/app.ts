@@ -6,6 +6,9 @@ import cors from 'cors'
 import authRouter from './routes/auth.routes'
 import userRouter from './routes/user.routes'
 import roomRouter from './routes/room.routes'
+import contactRouter from './routes/contact.routes'
+import privateChatRouter from './routes/private_chat.routes'
+import roomChatRouter from './routes/room_message.routes'
 import { socketAuth } from './sockets/socketAuth'
 import { socketConnect } from './sockets/socketConnect'
 
@@ -35,5 +38,8 @@ app.get('/api/hello', (req: Request, res: Response) => {
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/room', roomRouter)
+app.use('/api/contact', contactRouter)
+app.use('/api/private', privateChatRouter)
+app.use('/api/room_chat', roomChatRouter)
 
 export default server;

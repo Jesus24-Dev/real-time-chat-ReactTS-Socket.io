@@ -10,6 +10,7 @@ const UserList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null)
     const {socket} = useSocket()
+    const url = import.meta.env.VITE_REACT_URL_API
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -22,7 +23,7 @@ const UserList = () => {
             }
 
             try {
-                const response = await fetch(`http://localhost:3030/api/user/${parsedUser.id}`, {
+                const response = await fetch(`${url}/user/${parsedUser.id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -52,7 +53,7 @@ const UserList = () => {
         }
         
         fetchUsers();
-    }, [socket])
+    }, [socket, url])
 
     const addContact = async (id: string | undefined) => {
         const user = localStorage.getItem('user')
@@ -61,7 +62,7 @@ const UserList = () => {
             return
         }
             try {
-                const response = await fetch(`http://localhost:3030/api/contact`, {
+                const response = await fetch(`${url}/contact`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

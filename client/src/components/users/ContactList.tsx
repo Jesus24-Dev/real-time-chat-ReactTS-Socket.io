@@ -11,6 +11,7 @@ export default function ContactList() {
   const [error, setError] = useState<string | null>(null);
   const {socket} = useSocket()
   const { updateRoomId, updateRoomName } = useRoom(); 
+  const url = import.meta.env.VITE_REACT_URL_API
 
   const startConversation = (contactId: string | undefined, contactName: string) => {
     const user = localStorage.getItem('user');
@@ -35,7 +36,7 @@ export default function ContactList() {
                 setError('User not found')
                 return
             }
-           const response = await fetch(`http://localhost:3030/api/contact/${parsedUser.id}`, {
+           const response = await fetch(`${url}/contact/${parsedUser.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ export default function ContactList() {
         }
     }
     fetchContacts();
-  }, [])
+  }, [url])
 
 
   return (

@@ -13,7 +13,7 @@ export default function UserProfile() {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const {logout} = useAuth();
-
+    const url = import.meta.env.VITE_REACT_URL_API
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -25,7 +25,7 @@ export default function UserProfile() {
                     return;
                 }
 
-                const response = await fetch(`http://localhost:3030/api/user/me/${userId}`);
+                const response = await fetch(`${url}/user/me/${userId}`);
                 if (!response.ok) throw new Error("Error al obtener datos del usuario");
                 
                 const data = await response.json();

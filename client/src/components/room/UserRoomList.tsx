@@ -10,7 +10,8 @@ export default function UserRoomList(){
     const [userId, setUserId] = useState<number | null>(null)
     const {socket} = useSocket()
     const {updateRoomId, updateRoomName} = useRoom();
-
+    const url = import.meta.env.VITE_REACT_URL_API
+    
     useEffect(() => {
         const user = localStorage.getItem('user');
         const userId = user ? JSON.parse(user).id : null;
@@ -23,7 +24,7 @@ export default function UserRoomList(){
 
         const fetchRooms = async () => {
             try {
-                const response = await fetch(`http://localhost:3030/api/user/userRooms/${userId}`);
+                const response = await fetch(`${url}/user/userRooms/${userId}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -43,7 +44,7 @@ export default function UserRoomList(){
         }     
 
         fetchRooms();
-    }, [socket])
+    }, [socket, url])
 
     const joinRoom = (roomId: number | undefined, roomName: string) => {
         if (roomId){

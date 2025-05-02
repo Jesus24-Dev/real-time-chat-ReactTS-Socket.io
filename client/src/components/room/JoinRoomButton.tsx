@@ -10,6 +10,7 @@ export default function JoinRoomButton({roomId}: JoinRoomButtonProps) {
 
     const [userId, setUserId] = useState<number | null>(null);
     const { socket } = useSocket();
+    const url = import.meta.env.VITE_REACT_URL_API
 
     useEffect(() => {
         const user = localStorage.getItem('user');
@@ -24,7 +25,7 @@ export default function JoinRoomButton({roomId}: JoinRoomButtonProps) {
 
     const handleOnClick = () => {
         if(userId){
-            fetch(`http://localhost:3030/api/room/joinRoom`, {
+            fetch(`${url}/room/joinRoom`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

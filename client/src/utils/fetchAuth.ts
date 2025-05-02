@@ -9,8 +9,8 @@ interface AuthResponse {
 }
 
 export async function fetchAuth(isRegister: boolean = false, form: FormData){
-
-    const url = isRegister ? 'http://localhost:3030/api/auth/register' : 'http://localhost:3030/api/auth/login'
+    const apiUrl = import.meta.env.VITE_REACT_URL_API
+    const url = isRegister ? `${apiUrl}/auth/register` : `${apiUrl}/auth/login`
     const response = await fetch(url, {
         method: 'POST',
         headers: {

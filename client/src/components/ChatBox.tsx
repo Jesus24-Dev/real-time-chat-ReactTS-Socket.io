@@ -13,6 +13,7 @@ export default function ChatBox() {
   const [messageList, setMessageList] = useState<MessageAttributes[]>([]);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const { roomId, roomName } = useRoom();
+  const url = import.meta.env.VITE_REACT_URL_API
 
   useEffect(() => {
     if (!roomId) return;
@@ -26,8 +27,8 @@ export default function ChatBox() {
       setCurrentUser(parsedUser.username);
       try {
         const endpoint = isPrivate
-          ? `http://localhost:3030/api/private/${parsedUser.id}/${roomId.split('_').find(id => id !== parsedUser.id)}`
-          : `http://localhost:3030/api/room_chat/${roomId}`;
+          ? `${url}/private/${parsedUser.id}/${roomId.split('_').find(id => id !== parsedUser.id)}`
+          : `${url}/api/room_chat/${roomId}`;
 
         const response = await fetch(endpoint, {
           method: 'GET',
@@ -66,7 +67,7 @@ export default function ChatBox() {
     };
 
     fetchMessages();
-  }, [roomId]);
+  }, [roomId, url]);
 
   // Manejo de sockets
   useEffect(() => {

@@ -7,6 +7,7 @@ import Room from '../ui/Room';
 export default function RoomList() {
     const [room, setRoom] = useState<RoomData[]>([])
     const { socket } = useSocket();
+    const url = import.meta.env.VITE_REACT_URL_API
 
     useEffect(() => {
         const user = localStorage.getItem('user');
@@ -17,7 +18,7 @@ export default function RoomList() {
         }
 
         const fetchRooms = async () => {
-            const response = await fetch(`http://localhost:3030/api/room/all/${userId}`)
+            const response = await fetch(`${url}/room/all/${userId}`)
             const data = await response.json()
             if (data.status === 'success') {
                 setRoom(data.rooms)
@@ -34,7 +35,7 @@ export default function RoomList() {
             };
         }     
         fetchRooms()
-    }, [socket])
+    }, [socket, url])
 
     return (
         <div className="space-y-4 p-4 bg-gray-50 rounded-lg">

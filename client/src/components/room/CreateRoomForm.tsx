@@ -8,11 +8,12 @@ export default function CreateRoomForm(){
 
     const [formData, setFormData] = useState<RoomData>({id_admin: 0, roomName: '', description: ''})
     const { socket } = useSocket();
-
+    const url = import.meta.env.VITE_REACT_URL_API
+    
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const {id_admin, roomName, description} = formData
-        const response = await fetch('http://localhost:3030/api/room/create', {
+        const response = await fetch(`${url}/room/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

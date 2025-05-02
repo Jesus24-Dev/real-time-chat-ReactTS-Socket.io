@@ -1,9 +1,7 @@
-import MessageAttributes from "../types/messageType"
-import {PrivateMessage} from '../models/relations'
+import {PrivateMessage, RoomMessage} from '../models/relations'
 
 export function socketRoom(socket: any, io: any) {
-    socket.on('join_room', (roomId: string, userId?: number) => { 
-        console.log(`Usuario ${userId} uniéndose a sala ${roomId}`);
+    socket.on('join_room', (roomId: string, roomName?: string) => { 
         socket.join(roomId);
         io.emit('room_created', roomId);
     });
@@ -16,26 +14,28 @@ export function socketRoom(socket: any, io: any) {
         io.emit('room_created')
     })
 
-    socket.on('send_message', (roomId: string, message: MessageAttributes) => {
-        console.log(`Mensaje recibido en sala ${roomId}:`, message);
-        io.to(roomId).emit('receive_message', message);
-    });
-
-    socket.on('private_message', async (senderId: string, receiverId: string, content: string) => {
-        const message = {
-            senderId,
-            receiverId,
-            content,
-        };
-    
-        io.to(receiverId).emit('receive_private_message', message);
-        io.to(senderId).emit('receive_private_message', message);
-    
-        try {
-            await PrivateMessage.create({ senderId, receiverId, content });
-        } catch (err) {
-            console.error('Error al guardar mensaje privado:', err);
+    socket.on('send_message', async (messageData: {
+        roomId: string;
+        content: string;
+        senderId: string;
+        isPrivate: boolean; 
+        receiverId?: string;
+        username?: string;
+      }) => {
+        const { roomId, content, senderId, isPrivate, receiverId, username } = messageData;
+      
+        if (isPrivate) {
+          await PrivateMessage.create({ senderId, receiverId: receiverId!, content });
+        } else {
+          await RoomMessage.create({ senderId, roomId, content });
         }
-    });
-    
+      
+        io.to(roomId).emit('receive_message', {
+          content,
+          username,
+          senderId,
+          isPrivate, 
+        });
+      });
+
 }

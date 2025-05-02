@@ -23,11 +23,11 @@ PrivateMessage.init({
         allowNull: false
     },
     senderId: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
         allowNull: false
     },
     receiverId: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
         allowNull: false
     }
 }, {

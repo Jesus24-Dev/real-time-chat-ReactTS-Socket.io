@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import {Op} from 'sequelize'
-import {PrivateMessage} from '../models/relations'
+import {PrivateMessage, User} from '../models/relations'
 
 export async function sendPrivateMessage(req: Request, res: Response) {
     const { senderId, receiverId, content } = req.body;
@@ -22,10 +22,21 @@ export async function getPrivateChat(req: Request, res: Response): Promise<void>
             { senderId: userId2, receiverId: userId1 }
           ]
         },
-        order: [['createdAt', 'ASC']]
+        order: [['createdAt', 'ASC']],
+        include: [{
+          model: User,
+          as: 'receivedUser',  
+          attributes: ['id', 'username'], 
+      }, {
+        model: User,
+        as: 'sentUser',
+        attributes: ['id', 'username'], 
+      }],
+      
       });
-      res.status(200).json(messages);
+      res.status(200).json({status: 'success', messages});
     } catch (error) {
-      res.status(500).json({ error: 'Error fetching chat' });
+      console.log('error')
+      res.status(500).json({status: 'error', error: 'Error fetching chat' });
     }
   }

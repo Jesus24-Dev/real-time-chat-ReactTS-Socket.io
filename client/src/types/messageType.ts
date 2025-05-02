@@ -1,5 +1,12 @@
 export default interface MessageAttributes {
-    username: string;
-    message: string;
+    content: string;
+    receivedUserRoom: {
+        id: string;
+        username: string;
+    }
+    receivedUser?: {
+        id: string;
+        username: string;
+    }
     isCurrentUser?: boolean;
 }

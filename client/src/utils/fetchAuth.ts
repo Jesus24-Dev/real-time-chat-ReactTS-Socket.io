@@ -28,7 +28,7 @@ export async function fetchAuth(isRegister: boolean = false, form: FormData){
             status: data.status,
             message: data.message,
             token: data.token,
-            userId: data.user.id
+            userId: !isRegister ? data.user.id : null
         }
         return response;
     } else if (data.status === 'error'){

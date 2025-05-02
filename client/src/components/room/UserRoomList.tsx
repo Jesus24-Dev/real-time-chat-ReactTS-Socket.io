@@ -45,10 +45,10 @@ export default function UserRoomList(){
         fetchRooms();
     }, [socket])
 
-    const joinRoom = (roomId: number | undefined) => {
+    const joinRoom = (roomId: number | undefined, roomName: string) => {
         if (roomId){
             const roomIdStr = roomId.toString();
-            updateRoomName('roomIdStr')
+            updateRoomName(roomName)
             updateRoomId(roomIdStr);
             socket?.emit('join_room', roomIdStr, userId);    
         } 
@@ -84,7 +84,7 @@ export default function UserRoomList(){
                                 <Button 
                                     type="button" 
                                     label="Start Conversation" 
-                                    onClick={() => joinRoom(r.id)}
+                                    onClick={() => joinRoom(r.id, r.roomName)}
                                 />
                             </div>
                         </div>

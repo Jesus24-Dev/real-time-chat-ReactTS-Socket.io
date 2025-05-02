@@ -1,6 +1,8 @@
+
 import MessageAttributes from '../../types/messageType';
 
 export default function Message({ receivedUserRoom, content, isCurrentUser = false }: MessageAttributes) {
+
     return (
       <div className={`mb-3 flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
         <div

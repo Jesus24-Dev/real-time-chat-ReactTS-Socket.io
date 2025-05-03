@@ -1,6 +1,6 @@
 # 🟦 ChatApp – Real-Time Chat Application
 
-**ChatApp** is a real-time messaging application where users can chat in public rooms or private conversations. It includes JWT-based authentication, persistent message history, visual notifications, and a modern interface built with React and TailwindCSS.
+**ChatApp** is a real-time messaging application where users can chat in public rooms or private conversations. It includes JWT-based authentication, persistent message history, and a modern interface built with React and TailwindCSS.
 
 ![home page](image.png)
 
@@ -16,11 +16,9 @@
     
 - 💾 Persistent message history (Database)
     
-    
 - 🧭 Auto-scroll to the latest message
     
 - 👀 Modern, responsive interface with TailwindCSS
-    
 
 ---
 
@@ -28,11 +26,9 @@
 
 ### 1. Clone the repository
 
-bash
-
-CopiarEditar
-
-`git clone https://github.com/Jesus24-Dev/real-time-chat-ReactTS-Socket.io`
+```bash
+git clone https://github.com/Jesus24-Dev/real-time-chat-ReactTS-Socket.io
+```
 
 ### 2. Setup environment variables
 
